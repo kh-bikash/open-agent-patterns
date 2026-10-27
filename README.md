@@ -24,6 +24,8 @@ pytest -q
 
 This project uses deterministic tests and needs no model key for verification.
 
+The installed `agent-fallback` product calls a primary JSON HTTP endpoint and switches to a fallback endpoint on timeout, connection failure, or transient server error. Each endpoint receives `{"task":"..."}` and returns `{"output":"..."}`. Run `agent-fallback run "summarize this" --primary-url https://primary.example/transform --fallback-url https://backup.example/transform` after replacing the URLs. Use `agent-fallback serve --port 8080` for the local browser at `http://127.0.0.1:8080`; provide endpoints in the form. Run `python benchmarks/run.py` for the deterministic LangGraph recovery benchmark. Non-transient client and response-schema errors remain visible rather than silently falling back.
+
 ```python
 from open_agent_patterns.engine import BenchmarkCase, PatternRegistry, SafeFallbackPattern
 
@@ -36,6 +38,8 @@ print(registry.benchmark("safe-fallback", [BenchmarkCase("hello", "HELLO")]))
 
 ```mermaid
 flowchart LR
+    CLI[Command line] --> Task
+    Browser[Browser interface] --> Task
     Task[Task] --> Registry[Pattern registry]
     Registry --> Adapter[LangGraph fallback adapter]
     Adapter --> Primary[Primary node]
@@ -58,6 +62,8 @@ Pattern protocol -> registration with unique name -> context-isolated invocation
 See [ARCHITECTURE.md](ARCHITECTURE.md) for components, state, failure behavior, and operations.
 
 ## Deployment and safety
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for the non-root container, token-protected browser, data mounts, and release checks.
 
 This repository is a standalone reference extension and contribution package. It does not claim an upstream LangGraph, CrewAI, or AutoGen merge. Choose an upstream project, adapt its interface and tests, and submit a PR under that project's contribution rules.
 

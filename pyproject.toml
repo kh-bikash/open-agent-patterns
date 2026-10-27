@@ -9,6 +9,9 @@ description = "Extensible framework pattern, examples, and benchmark harness."
 requires-python = ">=3.11"
 dependencies = []
 
+[project.scripts]
+agent-fallback = "open_agent_patterns.__main__:main"
+
 [project.optional-dependencies]
 langgraph = ["langgraph>=1,<2"]
 dev = ["pytest>=8,<10", "ruff==0.17.3", "langgraph>=1,<2"]
