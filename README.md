@@ -34,6 +34,25 @@ print(registry.benchmark("safe-fallback", [BenchmarkCase("hello", "HELLO")]))
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    Task[Task] --> Registry[Pattern registry]
+    Registry --> Adapter[LangGraph fallback adapter]
+    Adapter --> Primary[Primary node]
+    Primary -->|Transient failure| Fallback[Fallback node]
+    Primary -->|Success| Result[Final result]
+    Fallback --> Result
+    Cases[Benchmark cases] --> Harness[Failure injection harness]
+    Harness --> Adapter
+    Harness --> Report[Baseline and recovery report]
+```
+
+| Component | Responsibility |
+|---|---|
+| Pattern contract | Defines a registry and stable `run` interface. |
+| LangGraph adapter | Builds a bounded recovery graph using StateGraph. |
+| Benchmark harness | Checks deterministic accuracy and injected failures. |
+
 Pattern protocol -> registration with unique name -> context-isolated invocation -> benchmark cases -> accuracy and latency report.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for components, state, failure behavior, and operations.
