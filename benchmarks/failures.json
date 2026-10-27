@@ -1,0 +1,6 @@
+[
+  {"task": "alpha", "primary_fails": false, "expected": "ALPHA"},
+  {"task": "beta", "primary_fails": true, "expected": "BETA"},
+  {"task": "gamma", "primary_fails": true, "expected": "GAMMA"},
+  {"task": "delta", "primary_fails": false, "expected": "DELTA"}
+]

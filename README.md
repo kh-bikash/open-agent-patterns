@@ -35,6 +35,8 @@ This repository is a standalone reference extension and contribution package. It
 
 The optional LangGraph adapter in `src/open_agent_patterns/langgraph_adapter.py` builds a runnable recovery graph. Install `.[langgraph]` to use it. `python benchmarks/run.py` runs the deterministic benchmark dataset; see [CONTRIBUTING.md](CONTRIBUTING.md) before proposing an upstream PR.
 
+See [TUTORIAL.md](TUTORIAL.md) for a complete LangGraph walkthrough and the limits of the failure-injection benchmark.
+
 Install this as a library in an authenticated application or worker. Register trusted handlers and keep application secrets outside source control.
 
 ## Verification

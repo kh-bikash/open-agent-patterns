@@ -30,3 +30,9 @@ The application should propagate failed operations to its caller or queue so the
 3. Persist SQLite files on durable storage and back them up; migrate to a managed database for high write volume or multiple replicas.
 4. Run `pytest -q` in CI before deployment.
 5. Define workload specific evaluation cases, latency objectives, and rollback criteria before serving real users.
+
+## Extension and benchmark contract
+
+`PatternRegistry` accepts objects implementing `name` and `run(task, context)` and rejects duplicate names. `SafeFallbackPattern` catches only transient timeout, connection, and runtime failures from its primary function. The optional `langgraph_adapter.py` builds a `StateGraph` with primary and fallback nodes. The graph takes one recovery branch and terminates; validation and programming errors still surface.
+
+`benchmarks/cases.json` tests direct output accuracy. `benchmarks/failures.json` injects primary failures and compares baseline with recovery graph accuracy on the same cases. These deterministic cases prove branch behavior, not model quality or real provider savings. [TUTORIAL.md](TUTORIAL.md) shows installation and use. An upstream LangGraph PR needs a maintainer approved, assigned issue under its current contribution rules; this standalone package makes no claim of upstream acceptance.
