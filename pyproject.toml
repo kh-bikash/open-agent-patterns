@@ -11,7 +11,7 @@ dependencies = []
 
 [project.optional-dependencies]
 langgraph = ["langgraph>=1,<2"]
-dev = ["pytest>=8,<10", "langgraph>=1,<2"]
+dev = ["pytest>=8,<10", "ruff==0.17.3", "langgraph>=1,<2"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

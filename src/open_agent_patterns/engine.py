@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable, Protocol
+from typing import Any, Protocol
 
 
 class Pattern(Protocol):
     name: str
+
     def run(self, task: str, context: dict[str, Any]) -> str: ...
 
 
@@ -36,7 +38,13 @@ class PatternRegistry:
     def run(self, name: str, task: str, context: dict[str, Any] | None = None) -> str:
         return self._patterns[name].run(task, dict(context or {}))
 
-    def benchmark(self, name: str, cases: list[BenchmarkCase], *, scorer: Callable[[str, str], bool] | None = None) -> BenchmarkResult:
+    def benchmark(
+        self,
+        name: str,
+        cases: list[BenchmarkCase],
+        *,
+        scorer: Callable[[str, str], bool] | None = None,
+    ) -> BenchmarkResult:
         if not cases:
             raise ValueError("benchmark needs at least one case")
         scorer = scorer or (lambda actual, expected: actual.strip() == expected.strip())
@@ -45,7 +53,12 @@ class PatternRegistry:
         for case in cases:
             actual = self.run(name, case.task)
             correct += bool(scorer(actual, case.expected))
-        return BenchmarkResult(name, correct / len(cases), (time.monotonic() - started) * 1000 / len(cases), len(cases))
+        return BenchmarkResult(
+            name,
+            correct / len(cases),
+            (time.monotonic() - started) * 1000 / len(cases),
+            len(cases),
+        )
 
 
 @dataclass(frozen=True)

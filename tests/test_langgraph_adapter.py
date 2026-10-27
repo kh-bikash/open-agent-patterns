@@ -9,6 +9,7 @@ def test_langgraph_success():
 def test_langgraph_recovers_transient_failure():
     def fail(_):
         raise TimeoutError("timed out")
+
     graph = build_fallback_graph(fail, lambda task: "recovered " + task)
     result = graph.invoke({"task": "hello"})
     assert result["answer"] == "recovered hello"

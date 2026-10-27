@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Callable, NotRequired, TypedDict
+from collections.abc import Callable
+from typing import NotRequired, TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
@@ -27,6 +28,8 @@ def build_fallback_graph(primary: Callable[[str], str], fallback: Callable[[str]
     graph.add_node("primary", call_primary)
     graph.add_node("fallback", call_fallback)
     graph.add_edge(START, "primary")
-    graph.add_conditional_edges("primary", lambda state: "fallback" if state.get("error") else END)
+    graph.add_conditional_edges(
+        "primary", lambda state: "fallback" if state.get("error") else END
+    )
     graph.add_edge("fallback", END)
     return graph.compile()
