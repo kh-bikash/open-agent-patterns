@@ -15,3 +15,6 @@ jobs:
       - run: ruff check src tests
       - run: ruff format --check src tests
       - run: pytest -q
+      - run: ruff check benchmarks
+      - run: ruff format --check benchmarks
+      - run: python benchmarks/run.py
