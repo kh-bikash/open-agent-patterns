@@ -1,0 +1,32 @@
+# Architecture
+
+## Goal
+
+Define a small agent pattern interface, register extensions, and benchmark a safe fallback pattern.
+
+## Request path
+
+Pattern protocol -> registration with unique name -> context-isolated invocation -> benchmark cases -> accuracy and latency report.
+
+## Components
+
+- `src/open_agent_patterns/engine.py`: policy and state transitions for this project.
+- `src/open_agent_patterns/langgraph_adapter.py`: optional StateGraph integration with a fallback branch.
+
+- `tests/test_engine.py`: deterministic behavior and failure tests.
+- `.github/workflows/ci.yml`: install and test gate.
+
+
+## State and failure behavior
+
+This repository is a standalone reference extension and contribution package. It does not claim an upstream LangGraph, CrewAI, or AutoGen merge. Choose an upstream project, adapt its interface and tests, and submit a PR under that project's contribution rules.
+
+The application should propagate failed operations to its caller or queue so the caller can decide whether to retry. Input and handler output are treated as untrusted at the integration boundary.
+
+## Operations checklist
+
+1. Set secrets through a secret manager and rotate them regularly.
+2. Put the service or integrating application behind TLS and authentication.
+3. Persist SQLite files on durable storage and back them up; migrate to a managed database for high write volume or multiple replicas.
+4. Run `pytest -q` in CI before deployment.
+5. Define workload specific evaluation cases, latency objectives, and rollback criteria before serving real users.

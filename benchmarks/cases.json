@@ -1,0 +1,5 @@
+[
+  {"task": "hello", "expected": "HELLO"},
+  {"task": "agent", "expected": "AGENT"},
+  {"task": "fallback", "expected": "FALLBACK"}
+]
