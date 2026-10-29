@@ -88,6 +88,40 @@ Install this as a library in an authenticated application or worker. Register tr
 
 `pytest -q` runs deterministic tests. GitHub Actions runs the same suite on pushes and pull requests.
 
+## Product guide
+
+### Use the fallback workflow
+
+Configure a primary JSON endpoint and a fallback JSON endpoint. Each receives a task and returns an `output`. The app tries the primary first and switches only for failures considered transient, such as a connection problem, timeout, or server error. A non-transient client error or malformed response remains visible so an invalid request is not hidden by a fallback.
+
+| Part | Responsibility |
+|---|---|
+| Primary endpoint | Preferred implementation of the task. |
+| Fallback endpoint | A compatible backup for transient primary failures. |
+| Pattern registry | Names and runs reusable agent patterns. |
+| Benchmark harness | Checks outputs and latency under normal and injected-failure cases. |
+
+The CLI and local browser let an operator supply endpoint URLs. The library accepts Python callables, making it useful even when your application does not use HTTP. The optional LangGraph adapter models the same recovery route as a bounded graph. Install the `langgraph` extra before running that adapter.
+
+### Run a meaningful benchmark
+
+`python benchmarks/run.py` reads deterministic cases and injected failures, runs the recovery path, and reports whether expected outputs were produced. This is a reliability check for the pattern, not evidence that an LLM is more accurate. Add cases from your own service and measure both success rate and latency before adopting the fallback. [TUTORIAL.md](TUTORIAL.md) walks through the LangGraph version and the limits of the benchmark.
+
+### Trust and contribution boundary
+
+The browser should be used only with endpoints you trust; a public deployment accepting arbitrary URLs would need stronger network restrictions. The package is an independent reference implementation. It is ready to be adapted for an upstream contribution, but no upstream PR or merge is claimed. [CONTRIBUTING.md](CONTRIBUTING.md) explains how to prepare such a contribution. [ARCHITECTURE.md](ARCHITECTURE.md) and [DEPLOYMENT.md](DEPLOYMENT.md) cover the interface and local operations.
+
+### Common issues
+
+| Symptom | Check |
+|---|---|
+| Fallback does not run | Confirm the primary failure is transient; client and schema errors are intentionally surfaced. |
+| Both endpoints fail | Inspect their availability and response shape; a fallback is not a substitute for a healthy service. |
+| The browser rejects a URL | Use HTTPS, or loopback HTTP for local development. |
+| The LangGraph example cannot import | Install the optional `langgraph` extra before running it. |
+
+The benchmark reports behavior on its supplied cases. Add failure modes from your own environment, such as slow responses and malformed JSON, before using the pattern as an availability control.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
