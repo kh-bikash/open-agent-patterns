@@ -1,6 +1,17 @@
 # Open Agent Patterns
 
-Define a small agent pattern interface, register extensions, and benchmark a safe fallback pattern.
+## About
+
+This repository is a working pattern for recovering when an agent's primary tool or service is temporarily unavailable. It tries a primary JSON endpoint, switches to a fallback endpoint for transient failures, and keeps non-transient errors visible. It also includes a small registry, a LangGraph adapter, and a benchmark that injects failures so you can measure recovery behavior.
+
+### What you can do
+
+- Run a primary and fallback endpoint from the CLI or local browser.
+- Reuse the fallback pattern in a Python application.
+- Run a deterministic benchmark with success and failure cases.
+- Follow the tutorial to adapt the pattern for an upstream open-source project.
+
+This is a standalone project and contribution-ready reference, not a claim that a PR has been merged into LangGraph, CrewAI, or AutoGen. The local browser accepts endpoint URLs for development; only configure services you trust. There is no public hosted URL yet.
 
 ## Quick start
 
